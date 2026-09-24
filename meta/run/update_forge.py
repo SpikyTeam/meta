@@ -365,7 +365,7 @@ def main():
 
     print("Grabbing installers and dumping installer profiles...")
     # get the installer jars - if needed - and get the installer profiles out of them
-    with concurrent.futures.ThreadPoolExecutor() as executor:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
         futures = []
         for key, entry in new_index.versions.items():
             eprint("Updating Forge %s" % key)
