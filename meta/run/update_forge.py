@@ -186,7 +186,12 @@ def process_forge_version(version, jar_path):
     # harvestables from the installer
     if not os.path.isfile(profile_path):
         print(jar_path)
-        with zipfile.ZipFile(jar_path) as jar:
+        try:
+            jar = zipfile.ZipFile(jar_path)
+        except zipfile.BadZipFile:
+            eprint("Skipping %s: not a valid zip archive" % version.long_version)
+            return
+        with jar:
             with suppress(KeyError):
                 with jar.open("version.json") as profile_zip_entry:
                     version_data = profile_zip_entry.read()
