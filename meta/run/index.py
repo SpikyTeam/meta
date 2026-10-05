@@ -27,9 +27,14 @@ for package in sorted(os.listdir(LAUNCHER_DIR)):
     if package in ignore:
         continue
 
-    sharedData = MetaPackage.parse_file(
-        os.path.join(LAUNCHER_DIR, package, "package.json")
-    )
+    packageJson = os.path.join(LAUNCHER_DIR, package, "package.json")
+    # the meta tree shares its repository with the launcher website, which
+    # brings its own entries to the root (the static tree, dotfiles). Only a
+    # directory that actually carries a package.json is a meta package.
+    if not os.path.isfile(packageJson):
+        continue
+
+    sharedData = MetaPackage.parse_file(packageJson)
     recommendedVersions = set()
     if sharedData.recommended:
         recommendedVersions = set(sharedData.recommended)
